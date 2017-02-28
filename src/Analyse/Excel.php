@@ -11,10 +11,7 @@
 
 namespace wangxi\Crawler\Analyse;
 
-class Dom
+class Excel
 {
-    public function __construct()
-    {
 
-    }
 }

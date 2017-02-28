@@ -35,6 +35,9 @@ class Page
     {
         $this->cache=Cache::init();
 
+//        \phpQuery::$debug=true;
+        \phpQuery::$defaultCharset='gbk';
+
         $init_page_cont=Cache::fetchByUrl($this->initUrl);
         $this->setDoc($init_page_cont);
 
@@ -145,13 +148,13 @@ class Page
         return $page_urls;
     }
 
-    public function analysePageUrl($page_cont)
+    public function analysePage($page_cont)
     {
         $this->setDoc($page_cont);
 
         foreach(pq('#vs_table .vs_lines') as $row){
             $req_url=pq($row)->find('td:eq(7) > a:first')->attr('href');
-            Logger::info($req_url);
+            Logger::info('analyse page: '.$req_url);
 
             if(!empty($req_url) && !array_key_exists($req_url, self::$analysePageUrls)){
 //                self::$analysePageUrls[$req_url]=[];
@@ -217,18 +220,17 @@ class Page
             foreach(pq($jf_content)->eq($idx)->find('tr')->filter(function($idx){
                 return $idx>0;
             }) as $i=>$row){
-//        dump(pq($row)->length);
                 $tds=pq($row)->find('td')->filter(function($idx){
                     return $idx>0;
                 });
-//        dump($tds->length);
+
                 foreach($tds as $td){
                     $jf_box_info[$t_name][$i][]=pq($td)->text();
                 }
             }
         }
 
-        //print_r($jf_box_info);
+        print_r($jf_box_info);
 
         //最近战绩, 主客场战绩
         $zj_info=$zj_zk_info=[];
@@ -244,10 +246,11 @@ class Page
                 }
             }
         }
-//print_r($zj_info);
-//print_r($zj_zk_info);
 
-//平均数据
+        print_r($zj_info);
+        print_r($zj_zk_info);
+
+        //平均数据
         $pj_cols=['总平均数','主场','客场'];
         $pj_rows=['平均入球','平均失球'];
         $pj_info=[];
