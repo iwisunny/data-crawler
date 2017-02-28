@@ -1,0 +1,44 @@
+{
+  "name": "wangxi/php-data-crawler",
+  "description": "php crawler client",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "iwisunny",
+      "email": "iwisunny@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "ext-curl": "*",
+    "illuminate/database": "^5.4",
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.5",
+    "doctrine/dbal": "^2.5"
+  },
+  "autoload": {
+    "classmap": [
+
+    ],
+    "psr-4": {
+      "wangxi\\Crawler\\": "src/"
+    },
+    "files": [
+      "helpers/common.php",
+      "helpers/phpquery/phpQuery/phpQuery.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
+}
