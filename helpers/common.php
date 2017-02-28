@@ -45,3 +45,13 @@ function config($conf_item='', $default=[])
     }
     return $confs;
 }
+
+function cryptKey($data, $algo='md5', $salt='')
+{
+    return $algo=='md5' ? md5($data.$salt) : sha1($data.$salt);
+}
+
+function debugMsg($msg='')
+{
+    echo '[', date('Y-m-d H:i:s',time()),'] ', (string)$msg, PHP_EOL;
+}

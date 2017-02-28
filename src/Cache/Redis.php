@@ -11,7 +11,7 @@
 
 namespace wangxi\Crawler\Cache;
 
-class Redis
+class Redis implements CacheInterface
 {
 
 }

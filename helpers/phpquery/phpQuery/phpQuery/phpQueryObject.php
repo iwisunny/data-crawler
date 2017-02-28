@@ -1251,7 +1251,7 @@ class phpQueryObject
 									}
 									// cut last character
 									$attr = substr($attr, 0, -1);
-                                    
+
                                     $isMatch=preg_match("@{$pattern}@", $node->getAttribute($attr));
 
 //									$isMatch = extension_loaded('mbstring') && phpQuery::$mbstringSupport
@@ -1888,7 +1888,7 @@ class phpQueryObject
 	}
 	/**
 	 * Enter description here...
-	 * 
+	 *
 	 * @param $code
 	 * @return unknown_type
 	 */
@@ -1899,7 +1899,7 @@ class phpQueryObject
 	}
 	/**
 	 * Enter description here...
-	 * 
+	 *
 	 * @param $code
 	 * @return unknown_type
 	 */
@@ -2929,7 +2929,7 @@ class phpQueryObject
 	}
 	/**
 	 * Enter description here...
-	 * 
+	 *
 	 * @param <type> $key
 	 * @param <type> $value
 	 */
@@ -2946,7 +2946,7 @@ class phpQueryObject
 	}
 	/**
 	 * Enter description here...
-	 * 
+	 *
 	 * @param <type> $key
 	 */
 	public function removeData($key) {
@@ -3101,7 +3101,7 @@ class phpQueryObject
 					.($node->getAttribute('id')
 						? '#'.$node->getAttribute('id'):'')
 					.($node->getAttribute('class')
-						? '.'.join('.', split(' ', $node->getAttribute('class'))):'')
+						? '.'.join('.', explode(' ', $node->getAttribute('class'))):'')
 					.($node->getAttribute('name')
 						? '[name="'.$node->getAttribute('name').'"]':'')
 					.($node->getAttribute('value') && strpos($node->getAttribute('value'), '<'.'?php') === false

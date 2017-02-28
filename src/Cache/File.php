@@ -8,12 +8,10 @@
  * @version 0.1
  * Date 17-2-28
  */
-return [
-    'memcache'=> [
-        ['host' => '127.0.0.1', 'port' => 7036, 'weight' => 1]
-    ],
 
-    'redis'=>[
-        //
-    ]
-];
+namespace wangxi\Crawler\Cache;
+
+class File implements CacheInterface
+{
+
+}

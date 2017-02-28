@@ -13,5 +13,18 @@ namespace wangxi\Crawler;
 
 class Logger
 {
+    protected static $debug=false;
 
+    public static function setDebug($debug)
+    {
+        self::$debug=!!$debug;
+    }
+
+    public static function info($msg='')
+    {
+        //todo
+        if(self::$debug){
+            echo '[', date('Y-m-d H:i:s',time()),'] ', (string)$msg, PHP_EOL;
+        }
+    }
 }
