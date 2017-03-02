@@ -11,22 +11,24 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use wangxi\Crawler\Perf;
-use wangxi\Crawler\Cache\Cache;
 use wangxi\Crawler\Analyse\Page;
 use wangxi\Crawler\Logger;
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+ini_set('display_startup_errors', true);
+set_time_limit(0);
+ini_set('memory_limit', '256M');
 
 Perf::start();
 Logger::setDebug(true);
 
-//$cache=Cache::init();
-
 $page=new Page();
 
-$pages_level_one=$page->getPageContentOfLevelOne(50);
-//dump(array_keys($pages_level_one));
+$pages=$page->getPageContentOfLevelOne();
 
-foreach($pages_level_one as $pg){
-    $page->analysePage($pg);
+foreach($pages as $url=> $pg){
+    $page->analysePage($pg, $url);
 }
 
 Perf::summary();

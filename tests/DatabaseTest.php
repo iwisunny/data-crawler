@@ -35,7 +35,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             $table->timestamps();
         });
 
-        Capsule::schema()->dropIfExists('from_sites');
+//        Capsule::schema()->dropIfExists('from_sites');
 
 //        Capsule::schema()->table('from_sites', function($table){
 //           $table->string('site_name', 100)->change();

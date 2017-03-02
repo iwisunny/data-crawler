@@ -15,7 +15,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 {
     public function test_common_helper()
     {
-        $cache_conf=config('cache.memcached');
+        $cache_conf=config('cache');
         dump($cache_conf);
     }
 }
