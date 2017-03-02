@@ -39,7 +39,8 @@ class Perf
         echo PHP_EOL, PHP_EOL;
         print_r([
             'cpu_time'=> round(microtime(true) - _START, 3). ' Sec',
-            'peak_memory'=> floatval(memory_get_peak_usage(true)/1024/1024).' MB'
+            'peak_memory'=> floatval(memory_get_peak_usage(true)/1024/1024).' MB',
+            'current_memory'=> floatval(memory_get_usage(true)/1024/1024).' MB'
         ]);
     }
 }

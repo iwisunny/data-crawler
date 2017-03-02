@@ -16,6 +16,7 @@ use wangxi\Crawler\Logger;
 use GuzzleHttp\Exception\ConnectException;
 use Exception;
 use wangxi\Crawler\Analyse\Excel;
+use wangxi\Crawler\Perf;
 
 require_once __DIR__.'/../../helpers/phpquery/phpQuery/phpQuery.php';
 
@@ -57,9 +58,13 @@ class Page
 //                $doc=mb_convert_encoding($doc, 'UTF-8', $charset);
 //            }
 
-//            echo $doc;exit;
-
 //            $doc=\phpQuery::newDocument($doc, 'text/html; charset=utf-8');
+
+            //清空phpquery注册的文档对象,避免内存溢出
+            \phpQuery::$documents=[];
+
+            Perf::summary();
+
             $doc=\phpQuery::newDocument($doc);
         }
 
@@ -167,9 +172,27 @@ class Page
         $max_limit=10;
         $i=0;
         $retry_times=3;
-        foreach(pq('#vs_table .vs_lines') as $row){
+        $rows=pq('#vs_table .vs_lines');
+        $cnt_rows=$rows->length;
+        $idx_rows=0;
+
+        //trans pq domElement obj to generator for sake of memory reduce
+//        $gen_rows=function() use ($rows){
+//            foreach($rows as $row){
+//                yield $row;
+//            }
+//        };
+
+        foreach($rows as $k=> $row){
+            //fixme
+//            if(memory_get_usage(true)/1024/1024 > 100){
+//                //dump all vars
+//                print_r(get_defined_vars());
+//                exit;
+//            }
+
             $req_url=pq($row)->find('td:eq(7) > a:first')->attr('href');
-            Logger::info('analyse page: '.$req_url);
+            Logger::info('analyse page: ('.$idx_rows.' of '.$cnt_rows.') '. $req_url);
 
             if(!empty($req_url) && !array_key_exists($req_url, self::$analysePageUrls)){
 
@@ -177,6 +200,12 @@ class Page
                     try{
                         $i>0 && Logger::info('retry '. ($i). ' times..');
                         $pg_cont=Cache::fetchByUrl($req_url, false);    //no need cache these page html
+
+                        if(false==$pg_cont){
+                            //页面访问异常
+                            Logger::log('页面访问异常, 跳过该页面: '. $req_url);
+                            return;
+                        }
 
                         break;
                     }
@@ -199,6 +228,8 @@ class Page
 
                 //收集单个analyse data,并添加到excel的一个worksheet
                 $excel->createWorksheetFromAnalyseData($req_url, $data);
+
+                $idx_rows++;
 
 //                ++$i;
 //                if($i>$max_limit){

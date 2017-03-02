@@ -14,6 +14,8 @@ namespace wangxi\Crawler\Cache;
 use GuzzleHttp\Client;
 use Exception;
 use wangxi\Crawler\Logger;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
 
 class Cache
 {
@@ -66,18 +68,63 @@ class Cache
         $site_cont=self::$obj->get($site_key);
 
         if(false===$site_cont){
-            Logger::info('cache miss, '. $url);
+            Logger::info('cache missing');
 
             $http=new Client();
 
-            $res=$http->get($url,[
-                'timeout'=>self::CONN_TIME_OUT
-            ]);
 
-            $status_code=$res->getStatusCode();
-            if($status_code>=400){
-                throw new Exception('request failed');
+            $retry_times=3;
+            for($i=0; $i<$retry_times; $i++){
+                try{
+                    $i>0 && Logger::info('retry '. ($i+1). ' times..');
+
+                    $res=$http->get($url,[
+                        'timeout'=>self::CONN_TIME_OUT
+                    ]);
+
+                    $status_code=$res->getStatusCode();
+
+                    if($status_code>=400 && $status_code<500){
+                        Logger::info($url.' not found, ignore');
+                        continue;   //fixme
+//                        throw new Exception('request failed');
+                    }
+                    else if($status_code>500){
+                        //try again
+                        $res=$http->get($url,[
+                            'timeout'=>self::CONN_TIME_OUT
+                        ]);
+                    }
+
+                    break;
+                }
+                catch(ConnectException $e){
+                    ++$i;
+                    Logger::info($e->getMessage());
+                    continue;
+                }
+                catch(ServerException $e){
+                    ++$i;
+                    Logger::info($e->getMessage());
+                    continue;
+                }
+                catch(Exception $e){
+                    ++$i;
+                    Logger::info($e->getMessage());
+                    continue;
+                }
+
             }
+
+            if($i == $retry_times){
+                Logger::info('retry '.$retry_times.', ignore '. $url);
+                return false;
+            }
+
+            if(!isset($res) || !is_object($res)){
+                return false;
+            }
+
             $site_cont=$res->getBody();
             if(is_object($site_cont)){
                 $site_cont=$site_cont->getContents();
@@ -87,6 +134,9 @@ class Cache
                 self::$obj->set($site_key, $site_cont, 3600*6);
             }
 
+        }
+        else{
+            Logger::info('cache hit');
         }
 
         return $site_cont;

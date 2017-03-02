@@ -42,7 +42,7 @@ class Excel
         $this->excel=new PHPExcel();
         $this->excel->getProperties()->setCreator('WANG');
 
-        self::$cachedExcelHandlers[$this->excel->getID()]=$this->excel;
+//        self::$cachedExcelHandlers[$this->excel->getID()]=$this->excel;
     }
 
     public function getExcel()
@@ -259,7 +259,7 @@ class Excel
     public function clearExcel(PHPExcel $excel)
     {
         $id=$excel->getID();
-        unset(self::$cachedExcelHandlers[$id]);
+//        unset(self::$cachedExcelHandlers[$id]);
 
         //fixme: 避免phpexcel对象 循环引用造成内存溢出
         $excel->disconnectWorksheets();

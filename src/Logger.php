@@ -27,4 +27,12 @@ class Logger
             echo '[', date('Y-m-d H:i:s',time()),'] ', (string)$msg, PHP_EOL;
         }
     }
+
+    public static function log($msg)
+    {
+        $log_file=date('Ymd', time()).'.log';
+        $msg='['.date('Y-m-d H:i:s').'] '. var_export($msg, true). PHP_EOL;
+
+        file_put_contents(__DIR__.'/../logs/'.$log_file, $msg, FILE_APPEND);
+    }
 }
