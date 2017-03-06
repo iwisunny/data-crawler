@@ -69,8 +69,6 @@ class Page
         }
 
         $this->doc=$doc;
-//        echo $doc->html();
-//        \phpQuery::selectDocument($this->doc);
     }
 
     public function setInitUrl($url)
@@ -194,6 +192,8 @@ class Page
             $req_url=pq($row)->find('td:eq(7) > a:first')->attr('href');
             Logger::info('analyse page: ('.$idx_rows.' of '.$cnt_rows.') '. $req_url);
 
+            $pg_cont=false;
+
             if(!empty($req_url) && !array_key_exists($req_url, self::$analysePageUrls)){
 
                 for($i=0; $i<$retry_times; $i++){
@@ -204,12 +204,11 @@ class Page
                         if(false==$pg_cont){
                             //页面访问异常
                             Logger::log('页面访问异常, 跳过该页面: '. $req_url);
-                            return;
                         }
 
                         break;
                     }
-                    catch(ConnectException $e){
+                    catch(Exception $e){
                         ++$i;
                         continue;
                     }
@@ -221,6 +220,9 @@ class Page
                     continue;
                 }
 
+                if(false===$pg_cont){
+                    continue;
+                }
 
                 $this->setDoc($pg_cont);    //switch to current document
 

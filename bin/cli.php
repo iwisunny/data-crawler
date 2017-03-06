@@ -20,7 +20,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 function usage(){
     echo <<<EOT
 [Data crawler by wangXi. v0.1.0]
-/path/to/crawler.php
+/path/to/cli.php
 -url <site-url|etc:http://google.com>
 -seed <src/Seed/[className]>
 -max-depth <depth=3>
